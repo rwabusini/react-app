@@ -1,7 +1,8 @@
 import React from 'react';
 import Login from './Login.js';
 import Signup from "./Signup.js";
-import Home from "./Home.js"
+// import Note from "./Note.js";
+import Home from "./Home.js";
 // import ReactDOM from 'react-dom'; 
 // import { BrowserRouter as Router, Route } from "react-router-dom";
 import {
@@ -27,7 +28,6 @@ function App() {
             <Route exact path="/" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/Signup" component={Signup} />
-          
           </div>
         </div>
       </HashRouter>

@@ -24,7 +24,7 @@ connection.connect(function (err) {
         console.log("Database created");
     });
 
-    var users = "CREATE TABLE IF NOT EXISTS USERS (id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(20),username VARCHAR(30),password VARCHAR(30),email VARCHAR(30))";
+    var users = "CREATE TABLE IF NOT EXISTS USERS (id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(20),password VARCHAR(30),email VARCHAR(30))";
     connection.query(users, function (err, result) {
         if (err) throw err;
         console.log("Table created");
@@ -38,15 +38,23 @@ connection.connect(function (err) {
 
 });
 
+/* session.id = results[0].id
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+    id : 0
+}));
+ */
 
-
-
+var obj={id:0}
 
 
 app.use(session({
     secret: 'secret',
     resave: true,
     saveUninitialized: true
+    // id: 0
 }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -63,9 +71,26 @@ app.post('/login', function (request, response) {
         //"username="+username+"password="+password
         connection.query('SELECT * FROM USERS WHERE email = ? AND password = ?', [email, password], function (error, results, fields) {
             if (results.length > 0) {
-                // request.session.loggedin = true;
+                request.session.loggedin = true;
+                obj.id = results[0].id
+                /*[
+  RowDataPacket {
+    id: 2,
+    text: 'note1',
+    date: 2020-06-29T21:00:00.000Z,
+    idu: 1
+  },
+  RowDataPacket {
+    id: 3,
+    text: 'hey',
+    date: 2020-06-30T21:00:00.000Z,
+    idu: 1
+  }
+] */
                 // request.session.username = username;
-                // response.redirect('/home');
+                    // response.redirect('/Note');
+                // console.log(obj.id)
+                
                 response.send('correct Username and/or Password!'); 
             } else {
                 response.send('Incorrect Username and/or Password!');
@@ -82,7 +107,6 @@ app.post('/register', function (req, res) {
     var today = new Date();
     var users = {
         "name": req.body.name,
-        "username": req.body.username,
         "password": req.body.password,
         "email": req.body.email
         }
@@ -118,7 +142,7 @@ app.post('/addNotes', function (req, res) {
     var note = {
         text: req.body.text,
         date: req.body.date,
-        idu:req.body.idu
+        idu:obj.id
     }
     connection.query('INSERT INTO notes SET ?', note, function (error, results, fields) {
         if (error) {
@@ -177,9 +201,10 @@ var note=[text,date,id]
 });
 
  app.get('/selectNotes', function (req, res) {
-     var idu=req.body.idu
+     var idu=obj.id
      var sql = 'SELECT * FROM NOTES where idu=?'
      connection.query(sql,idu, function (error, results, fields) {
+         console.log(results)
          if (error) {
              res.json({
                  status: false,
@@ -205,8 +230,10 @@ var note=[text,date,id]
 // //   response.end();
 // // });
 app.post('/yum',function(req,res){
- console.log("posted")   
- res.end("hi")
+    var name = req.body.name
+console.log("posted")   
+//  res.end(obj.id)
+    console.log(obj.id)
 })
 
 app.listen(5000, function () {

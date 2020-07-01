@@ -1,15 +1,19 @@
 import React from 'react';
-// import {login} from './UserFunctions';
+//  import Note from './Note.js';
 import axios from "axios";
+import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 
 class Login extends React.Component {
-    constructor(props){
-    super(props);
+    constructor(){
+    super();
     this.state = {
         email: "",
-        password: ""
+        password: "",
+        flag:false
     }
         this.onChangeUserEmail = this.onChangeUserEmail.bind(this);
+        this.onChangeUserFound = this.onChangeUserFound.bind(this);
         this.onChangeUserPassword = this.onChangeUserPassword.bind(this);
 
         this.onSubmit = this.onSubmit.bind(this);
@@ -19,6 +23,12 @@ class Login extends React.Component {
     // }
     onChangeUserEmail(e) {
         this.setState({ email: e.target.value })
+    }
+    onChangeUserFound(e) {
+        this.setState({ flag: true })
+        if (this.state.flag === true) {
+            return <Redirect to="/Note" />
+        }
     }
     onChangeUserPassword(e) {
         this.setState({ password: e.target.value })
@@ -43,8 +53,8 @@ class Login extends React.Component {
                 console.log(error)
             });
 
-        this.setState({ email: '', password: '' })
-
+        this.setState({ email: '', password: ''})
+      
         // let res = axios.post('http://localhost:5000/login', user);
 
         // console.log(res.data);
@@ -81,9 +91,10 @@ class Login extends React.Component {
                 <div id="login">
                         <input type="email" id="email" placeholder="Email" value={this.state.email} onChange={this.onChangeUserEmail} />
                         <input type="password" id="password" placeholder="Password" value={this.state.password} onChange={this.onChangeUserPassword} />
-                    <button id="send">Send</button>
+                        <button onClick={this.onChangeUserFound} value={this.state.flag} id="send">Send</button>
                 </div>
                 </form>
+            
             </div>
         )
     }
