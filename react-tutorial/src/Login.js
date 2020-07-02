@@ -27,7 +27,7 @@ class Login extends React.Component {
     onChangeUserFound(e) {
         this.setState({ flag: true })
         if (this.state.flag === true) {
-            return <Redirect to="/Note" />
+            return <Redirect from='/login' to="/Signup" />
         }
     }
     onChangeUserPassword(e) {
@@ -53,7 +53,7 @@ class Login extends React.Component {
                 console.log(error)
             });
 
-        this.setState({ email: '', password: ''})
+        this.setState({ email: '', password: '',flag:true})
       
         // let res = axios.post('http://localhost:5000/login', user);
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import SingleNote from "./SingleNote.js";
+import axios from "axios";
 
 // Receive items data through props
 
@@ -13,8 +14,9 @@ class AllNotes extends React.Component {
     componentDidMount() {
         axios.get('http://localhost:5000/selectNotes')
             .then(res => {
-                var notes = res.data;
-                this.setState({ notes });
+                console.log(res.data.data)
+                //  this.state.notes = res.data;
+                this.setState({ notes: res.data.data});
             })
     }
       //arr[i].text
@@ -39,7 +41,7 @@ render() {
             {this.state.notes.map(function (ele) {
                 return (
                     /* Pass useful attributes to SingleNote */
-                    <SingleNote text={ele.text} date={ele.date} />
+                    <SingleNote text={ele.text} date={ele.date} id={ele.id} />
                 )
             })}
         </div>

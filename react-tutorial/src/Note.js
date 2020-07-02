@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from "axios";
+import AllNotes from './AllNotes';
 // import AllNotes  from './AllNotes';
 class Note extends React.Component {
     constructor(props) {
@@ -61,7 +62,7 @@ class Note extends React.Component {
                 </div>
 
              </form>
-               
+               <div><AllNotes/></div>
             </div>
         );
     }

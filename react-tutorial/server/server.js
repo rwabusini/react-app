@@ -73,6 +73,7 @@ app.post('/login', function (request, response) {
             if (results.length > 0) {
                 request.session.loggedin = true;
                 obj.id = results[0].id
+                //arr[i].text
                 /*[
   RowDataPacket {
     id: 2,
@@ -211,11 +212,12 @@ var note=[text,date,id]
                  message: 'there are some error with query'
              })
          } else {
-             res.json({
+             res.send({
                  status: true,
                  data: results,
                  message: 'select all notes sucessfully'
              })
+            // res.send(data) 
          }
      });   
  });
