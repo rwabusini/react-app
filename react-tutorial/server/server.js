@@ -64,72 +64,77 @@ app.use(bodyParser.json());
 //   response.sendFile(path.join(__dirname + '/login.html'));
 // });
 // var hash;
-app.post('/login', function (request, response) {
-    console.log("inside post login server")
-    var email = request.body.email;
-    var password = request.body.password;
-    var hash = bcrypt.hashSync(password, 10);
-    const bcryptPassword = bcrypt.compareSync(password, hash);
-    console.log(bcryptPassword)
-    console.log(hash)
-    if (email && bcryptPassword) {
-      
-        //"username="+username+"password="+password
-        connection.query('SELECT * FROM USERS WHERE email = ? AND password = ?', [email, hash], function (error, results, fields) {
-            if (results.length > 0) {
-                request.session.loggedin = true;
-                request.session.name = results[0].name;
-                // response.redirect('/Note');
-                obj.id = results[0].id
-                //arr[i].text
-                /*[
-  RowDataPacket {
-    id: 2,
-    text: 'note1',
-    date: 2020-06-29T21:00:00.000Z,
-    idu: 1
-  },
-  RowDataPacket {
-    id: 3,
-    text: 'hey',
-    date: 2020-06-30T21:00:00.000Z,
-    idu: 1
-  }
-] */
-                // request.session.username = username;
-                    // response.redirect('/Note');
-                // console.log(obj.id)
+// app.post('/login', function (request, response) {
+//     console.log("inside post login server")
+//     var email = request.body.email;
+//     var password = request.body.password;
+//     connection.query('SELECT * FROM USERS WHERE email = ? AND password = ?', [email], function (error, results, fields) {
+
+//             // if (results.length > 0) {
+//                 if (bcrypt.compareSync(password, results[0].password)) {
+//                 request.session.loggedin = true;
+//                 request.session.name = results[0].name;
+//                 obj.id = results[0].id
                 
-                response.send('correct Username and/or Password!'); 
-            } else {
-                response.send('Incorrect Username and/or Password!');
-            }
-            response.end();
-        });
+//                 response.send('correct Username and/or Password!'); 
+//             } else {
+//                 response.send('Incorrect Username and/or Password!');
+//             }
+//             response.end();
+//         });
+//     // else {
+//     //     response.send('Please enter Username and Password!');
+//     //     response.end();
+//     // }
+// });
+// login
+app.post('/login', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    if (email && password) {
+        connection.query('SELECT * FROM users WHERE email = ?', [email],
+            (error, results, fields) => {
+                // if (results.length > 0) {
+                 if (bcrypt.compareSync(password, results[0].password)) {
+                    req.session.loggedin = true;
+                     req.session.name = results[0].name;
+                    obj.id = results[0].id
+                    // res.redirect('/Note');
+                    res.send("Successful");
+                    // res.redirect('/Note');
+
+                } else {
+                    res.send('Incorrect Email and/or Password!');
+                }
+                res.end();
+            });
     } else {
-        response.send('Please enter Username and Password!');
-        response.end();
+        res.send('Please enter Username and Password!');
+        res.end();
     }
 });
+
+
+
+
+
+
 //regester
 app.post('/register', function (req, res) {
     var today = new Date();
-    // var users = {
-    //     "name": req.body.name,
-    //     "password": req.body.password,
-    //     "email": req.body.email
-    //     }
+    
    var name = req.body.name
    var password = req.body.password
     var email = req.body.email
-    // const query = req.query;
+    
      var hash = bcrypt.hashSync(password, 10);
 
-    // bcrypt.hash(password, 10, function (err, hash) {
+ 
 
-        var values = {name: name, password: hash,email:email}
-    // var values = [name, hash,email]
-    console.log(hash)
+    var values = { name: name, password: hash,email:email}
+    
+    // console.log(hash)
     console.log(values)
         connection.query('INSERT INTO users SET ?',values, function (error, results, fields) {
         if (error) {

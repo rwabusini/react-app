@@ -52,7 +52,7 @@ class Note extends React.Component {
 
         axios.post('http://localhost:5000/logout')
             .then((res) => {
-                console.log("from logout in axios")
+                console.log("from logout in")
                 console.log(res.data)
                 this.setState({ redirect: true })
 

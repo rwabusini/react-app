@@ -43,12 +43,12 @@ class Login extends React.Component {
             .then((res) => {
                 console.log(res.data)
                 this.setState({ redirect: true })
-
+                console.log(this.state.redirect)
             }).catch((error) => {
                 console.log(error)
             });
 
-        this.setState({ email: '', password: '',flag:true})
+        this.setState({ email: '', password: ''})
       
         // let res = axios.post('http://localhost:5000/login', user);
 
@@ -82,7 +82,7 @@ class Login extends React.Component {
     render() {
         const { redirect } = this.state;
 
-        if (redirect) {
+        if (redirect===true) {
 
             return <Redirect to='/Note' exact component={Note} />;
         }
