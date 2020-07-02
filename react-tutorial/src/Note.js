@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from "axios";
 import AllNotes from './AllNotes';
+import { Redirect } from 'react-router-dom';
+import App from './App.js';
+
 // import AllNotes  from './AllNotes';
 class Note extends React.Component {
     constructor(props) {
@@ -11,7 +14,7 @@ class Note extends React.Component {
         }
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
-       
+        this.logout = this.logout.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
   
@@ -32,9 +35,10 @@ class Note extends React.Component {
             date: this.state.date
         };
     
-        axios.post('http://localhost:5000/addNotes', user)
+        axios.post('http://localhost:5000/Note', user)
             .then((res) => {
                 console.log(res.data)
+
             }).catch((error) => {
                 console.log(error)
             });
@@ -43,11 +47,30 @@ class Note extends React.Component {
 
       
     }
-    render() {
+    logout(){
        
 
+        axios.post('http://localhost:5000/logout')
+            .then((res) => {
+                console.log("from logout in axios")
+                console.log(res.data)
+                this.setState({ redirect: true })
+
+            }).catch((error) => {
+                console.log(error)
+            });  
+    }
+    render() {
+       
+        const { redirect } = this.state;
+
+        if (redirect) {
+
+            return <Redirect to='/App' exact component={App} />;
+        }
         return (
             <div>
+                <button onClick={this.logout}>logout</button>
                 <form onSubmit={this.onSubmit}>
 
                 <div>
@@ -58,6 +81,7 @@ class Note extends React.Component {
                             // onChange={this.onChangeDate}
                         />
                         <button onClick={this.onChangeDate}>Add</button>
+                        
                  
                 </div>
 

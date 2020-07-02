@@ -1,5 +1,5 @@
 import React from 'react';
-//  import Note from './Note.js';
+ import Note from './Note.js';
 import axios from "axios";
 import { Redirect } from 'react-router-dom';
 // import { Redirect } from 'react-router-dom';
@@ -9,11 +9,9 @@ class Login extends React.Component {
     super();
     this.state = {
         email: "",
-        password: "",
-        flag:false
+        password: ""
     }
         this.onChangeUserEmail = this.onChangeUserEmail.bind(this);
-        this.onChangeUserFound = this.onChangeUserFound.bind(this);
         this.onChangeUserPassword = this.onChangeUserPassword.bind(this);
 
         this.onSubmit = this.onSubmit.bind(this);
@@ -24,12 +22,7 @@ class Login extends React.Component {
     onChangeUserEmail(e) {
         this.setState({ email: e.target.value })
     }
-    onChangeUserFound(e) {
-        this.setState({ flag: true })
-        if (this.state.flag === true) {
-            return <Redirect from='/login' to="/Signup" />
-        }
-    }
+  
     onChangeUserPassword(e) {
         this.setState({ password: e.target.value })
     }
@@ -49,6 +42,8 @@ class Login extends React.Component {
         axios.post('http://localhost:5000/login', user)
             .then((res) => {
                 console.log(res.data)
+                this.setState({ redirect: true })
+
             }).catch((error) => {
                 console.log(error)
             });
@@ -85,13 +80,21 @@ class Login extends React.Component {
     // }
     }
     render() {
+        const { redirect } = this.state;
+
+        if (redirect) {
+
+            return <Redirect to='/Note' exact component={Note} />;
+        }
+
+
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
                 <div id="login">
                         <input type="email" id="email" placeholder="Email" value={this.state.email} onChange={this.onChangeUserEmail} />
                         <input type="password" id="password" placeholder="Password" value={this.state.password} onChange={this.onChangeUserPassword} />
-                        <button onClick={this.onChangeUserFound} value={this.state.flag} id="send">Send</button>
+                        <button  id="send">Send</button>
                 </div>
                 </form>
             

@@ -1,5 +1,6 @@
 var express = require('express');
 var session = require('express-session');
+var bcrypt = require('bcrypt');
 var bodyParser = require('body-parser');
 var path = require('path');
 var app = express();
@@ -24,13 +25,13 @@ connection.connect(function (err) {
         console.log("Database created");
     });
 
-    var users = "CREATE TABLE IF NOT EXISTS USERS (id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(20),password VARCHAR(30),email VARCHAR(30))";
+    var users = "CREATE TABLE IF NOT EXISTS USERS (id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(30),password VARCHAR(100),email VARCHAR(50) UNIQUE)";
     connection.query(users, function (err, result) {
         if (err) throw err;
         console.log("Table created");
     });
 
-    var notes = "CREATE TABLE IF NOT EXISTS NOTES (id INT AUTO_INCREMENT PRIMARY KEY,text VARCHAR(500),date DATE,idu INT(20),FOREIGN KEY(idu) REFERENCES USERS(id))";
+    var notes = "CREATE TABLE IF NOT EXISTS NOTES (id INT AUTO_INCREMENT PRIMARY KEY,text VARCHAR(1000),date DATE,idu INT,FOREIGN KEY(idu) REFERENCES USERS(id))";
     connection.query(notes, function (err, result) {
         if (err) throw err;
         console.log("Table created");
@@ -62,16 +63,23 @@ app.use(bodyParser.json());
 // app.get('/', function (request, response) {
 //   response.sendFile(path.join(__dirname + '/login.html'));
 // });
-
+// var hash;
 app.post('/login', function (request, response) {
     console.log("inside post login server")
     var email = request.body.email;
     var password = request.body.password;
-    if (email && password) {
+    var hash = bcrypt.hashSync(password, 10);
+    const bcryptPassword = bcrypt.compareSync(password, hash);
+    console.log(bcryptPassword)
+    console.log(hash)
+    if (email && bcryptPassword) {
+      
         //"username="+username+"password="+password
-        connection.query('SELECT * FROM USERS WHERE email = ? AND password = ?', [email, password], function (error, results, fields) {
+        connection.query('SELECT * FROM USERS WHERE email = ? AND password = ?', [email, hash], function (error, results, fields) {
             if (results.length > 0) {
                 request.session.loggedin = true;
+                request.session.name = results[0].name;
+                // response.redirect('/Note');
                 obj.id = results[0].id
                 //arr[i].text
                 /*[
@@ -106,14 +114,24 @@ app.post('/login', function (request, response) {
 //regester
 app.post('/register', function (req, res) {
     var today = new Date();
-    var users = {
-        "name": req.body.name,
-        "password": req.body.password,
-        "email": req.body.email
-        }
+    // var users = {
+    //     "name": req.body.name,
+    //     "password": req.body.password,
+    //     "email": req.body.email
+    //     }
+   var name = req.body.name
+   var password = req.body.password
+    var email = req.body.email
     // const query = req.query;
+     var hash = bcrypt.hashSync(password, 10);
 
-    connection.query('INSERT INTO users SET ?', users, function (error, results, fields) {
+    // bcrypt.hash(password, 10, function (err, hash) {
+
+        var values = {name: name, password: hash,email:email}
+    // var values = [name, hash,email]
+    console.log(hash)
+    console.log(values)
+        connection.query('INSERT INTO users SET ?',values, function (error, results, fields) {
         if (error) {
             res.json({
                 status: false,
@@ -127,6 +145,7 @@ app.post('/register', function (req, res) {
             })
         }
     });
+    // });
 });
 
 // app.post('/addNotes', function (req, res) {
@@ -139,7 +158,15 @@ app.post('/register', function (req, res) {
 //         console.log("1 record inserted");
 //     });
 // });
-app.post('/addNotes', function (req, res) {
+// app.get('/Note', function (request, response) {
+//     if (request.session.loggedin) {
+//         response.send('Welcome back, ' + request.session.name + '!');
+//     } else {
+//         response.send('Please login to view this page!');
+//     }
+//     response.end();
+// });
+app.post('/Note', function (req, res) {
     var note = {
         text: req.body.text,
         date: req.body.date,
@@ -157,6 +184,8 @@ app.post('/addNotes', function (req, res) {
                 data: results,
                 message: 'add note sucessfully'
             })
+            //  res.send('Welcome back, ' + request.session.name + '!');
+
         }
     });
 });
@@ -164,14 +193,16 @@ app.post('/delNotes', function (req, res) {
     var id = req.body.id
   
     // DELETE statment
-    var sql = `DELETE  FROM NOTES WHERE id = ?`;
+    var sql = 'DELETE  FROM NOTES WHERE id = ?';
 // var sql = "DELETE FROM customers WHERE address = 'Mountain 21'";
     // delete a row with id 1
     connection.query(sql, id, (error, results, fields) => {
         if (error)
             return console.error(error.message);
-
-        console.log('Deleted Row(s):', results.affectedRows);
+        if (results.affectedRows>0){
+        console.log('Deleted Row(s):', results.affectedRows);}
+        else{return 0;}
+        
     });
 });
 
@@ -223,20 +254,21 @@ var note=[text,date,id]
  });
 
 
-// // app.get('/home', function (request, response) {
-// //   if (request.session.loggedin) {
-// //     response.send('Welcome back, ' + request.session.username + '!');
-// //   } else {
-// //     response.send('Please login to view this page!');
-// //   }
-// //   response.end();
-// // });
-app.post('/yum',function(req,res){
-    var name = req.body.name
-console.log("posted")   
+
+app.post('/App',function(req,res){
+    // var name = req.body.name
+console.log("posted from App rout")   
 //  res.end(obj.id)
     console.log(obj.id)
 })
+
+app.post('/logout', (request, response) => {
+obj.id=0
+    console.log('Destroying session');
+    request.session.destroy();
+    response.send({ result: 'OK', message: 'Session destroyed' });
+    
+});
 
 app.listen(5000, function () {
     console.log('listening on port 3000!');

@@ -64,6 +64,8 @@
 //**************************************************** */
 import React from 'react';
 import axios from "axios";
+import { Redirect } from 'react-router-dom';
+import Login from './Login.js';
 class Signup extends React.Component {
    
     constructor(props) {
@@ -97,12 +99,19 @@ class Signup extends React.Component {
         axios.post('http://localhost:5000/register', user)
             .then((res) => {
                 console.log(res.data)
+                this.setState({ redirect: true })
             }).catch((error) => {
                 console.log(error)
             });
         this.setState({ name: '', email: '', password: '' })
     }
     render() {
+        const { redirect } = this.state;
+
+        if (redirect) {
+
+            return <Redirect to='/Login' exact component={Login} />;
+        }
         return (
             <div>
                 <form onSubmit={this.onSubmit}>

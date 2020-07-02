@@ -44,6 +44,7 @@ render() {
                     <SingleNote text={ele.text} date={ele.date} id={ele.id} />
                 )
             })}
+            {/* <button onClick={} >Delete</button> */}
         </div>
     );
 };
