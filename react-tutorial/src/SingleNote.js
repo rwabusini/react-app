@@ -1,7 +1,7 @@
 import React from 'react';
 // import SingleNote from "./SingleNote.js";
 import axios from "axios";
-
+import './App.css';
 // Receive items data through props
 
 class SingleNote extends React.Component {
@@ -59,14 +59,15 @@ class SingleNote extends React.Component {
     render() {
         return (
             <div >
-                <form>
-                <div className="video-list-entry-title">{this.props.text}</div>
-                <div className="video-list-entry-title">{this.props.date}</div>
-                <div className="video-list-entry-title">{this.props.id}</div>
-                    <button onClick={this.onSubmit} >Delete</button>
+                <form className="divNote">
+                <div className="list">{this.props.text}</div>
+                <div className="list">{this.props.date}</div>
+                <div className="list">{this.props.id}</div>
+                    <button  onClick={this.onSubmit} >Delete</button>
                     {/* <button onClick={this.onUpdate} >Update</button> */}
                     {/* <button onClick={this.handleNoteDelete(17)} >Delete</button> */}
                 </form>
+                <br/>
             </div>
         );
     };

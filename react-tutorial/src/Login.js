@@ -3,7 +3,7 @@ import React from 'react';
 import axios from "axios";
 import { Redirect } from 'react-router-dom';
 // import { Redirect } from 'react-router-dom';
-
+import './App.css';
 class Login extends React.Component {
     constructor(){
     super();
@@ -89,16 +89,31 @@ class Login extends React.Component {
 
 
         return (
-            <div>
-                <form onSubmit={this.onSubmit}>
-                <div id="login">
-                        <input type="email" id="email" placeholder="Email" value={this.state.email} onChange={this.onChangeUserEmail} />
-                        <input type="password" id="password" placeholder="Password" value={this.state.password} onChange={this.onChangeUserPassword} />
-                        <button  id="send">Send</button>
-                </div>
-                </form>
+            // <div>
+            //     <form onSubmit={this.onSubmit}>
+            //     <div id="login">
+            //             <input type="email" id="email" placeholder="Email" value={this.state.email} onChange={this.onChangeUserEmail} />
+            //             <input type="password" id="password" placeholder="Password" value={this.state.password} onChange={this.onChangeUserPassword} />
+            //             <button  id="send">Send</button>
+            //     </div>
+            //     </form>
             
+            // </div>
+            <div>
+                <form onSubmit={this.onSubmit} className="center">
+                    <div id="login" className="center1">
+                        <i class="fa fa-envelope icon"></i>
+                        <input type="email" id="email" placeholder=" Email" value={this.state.email} onChange={this.onChangeUserEmail} />
+                        <br></br> <br></br>
+                        <i class="fa fa-key icon"></i>
+                        <input type="password" id="password" placeholder=" Password" value={this.state.password} onChange={this.onChangeUserPassword} />
+                        <br></br> <br></br>
+                        <button id="send">Send</button>
+                    </div>
+                </form>
             </div>
+
+
         )
     }
 }

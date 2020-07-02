@@ -3,7 +3,7 @@ import axios from "axios";
 import AllNotes from './AllNotes';
 import { Redirect } from 'react-router-dom';
 import App from './App.js';
-
+import './App.css';
 // import AllNotes  from './AllNotes';
 class Note extends React.Component {
     constructor(props) {
@@ -69,24 +69,40 @@ class Note extends React.Component {
             return <Redirect to='/App' exact component={App} />;
         }
         return (
+            // <div>
+            //     <button onClick={this.logout}>logout</button>
+            //     <form onSubmit={this.onSubmit}>
+
+            //     <div>
+            //         <textarea className="text"
+            //             placeholder="enter"
+            //             rows={6} 
+            //             value={this.state.text} onChange={this.onChangeText}
+            //                 // onChange={this.onChangeDate}
+            //             />
+            //             <button onClick={this.onChangeDate}>Add</button>
+                        
+                 
+            //     </div>
+
+            //  </form>
+            //    <div><AllNotes/></div>
+            // </div>
             <div>
                 <button onClick={this.logout}>logout</button>
                 <form onSubmit={this.onSubmit}>
-
-                <div>
-                    <textarea className="text"
-                        placeholder="enter"
-                        rows={6} 
-                        value={this.state.text} onChange={this.onChangeText}
-                            // onChange={this.onChangeDate}
+                    <div>
+                        <textarea
+                            placeholder="Write your note"
+                            rows={6}
+                            value={this.state.text} onChange={this.onChangeText}
+                        // onChange={this.onChangeDate}
                         />
-                        <button onClick={this.onChangeDate}>Add</button>
-                        
-                 
-                </div>
-
-             </form>
-               <div><AllNotes/></div>
+                        <br></br>
+                        <button className="button1" onClick={this.onChangeDate}>Add</button>
+                    </div>
+                </form>
+                <div><AllNotes /></div>
             </div>
         );
     }
