@@ -177,3 +177,14 @@ img {
     width: 500px;
     margin-left: 10cm;
 }
+
+.date {
+    background-color: rgba(226, 224, 181, 0.892);
+    border-radius: 12px;
+    width: 200px;
+    font-family: Georgia;
+    /* text-shadow: 2px 2px 5px cadetblue; */
+    font-size: .4cm;
+    text-align: left;
+    margin-left: 0.5cm;
+}

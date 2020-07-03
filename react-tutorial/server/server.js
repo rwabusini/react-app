@@ -31,7 +31,7 @@ connection.connect(function (err) {
         console.log("Table created");
     });
 
-    var notes = "CREATE TABLE IF NOT EXISTS NOTES (id INT AUTO_INCREMENT PRIMARY KEY,text VARCHAR(1000),date DATE,idu INT,FOREIGN KEY(idu) REFERENCES USERS(id))";
+    var notes = "CREATE TABLE IF NOT EXISTS NOTES (id INT AUTO_INCREMENT PRIMARY KEY,text VARCHAR(1000),date DATETIME,idu INT,FOREIGN KEY(idu) REFERENCES USERS(id))";
     connection.query(notes, function (err, result) {
         if (err) throw err;
         console.log("Table created");
@@ -240,6 +240,8 @@ var note=[text,date,id]
  app.get('/selectNotes', function (req, res) {
      var idu=obj.id
      var sql = 'SELECT * FROM NOTES where idu=?'
+    //  var sql = 'SELECT id, text, Date_FORMAT(date, "%d%m%Y") FROM NOTES where idu=?'
+
      connection.query(sql,idu, function (error, results, fields) {
          console.log(results)
          if (error) {
